@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<!--
+user=root
+password=6962259
+url=jdbc:mysql://127.0.0.1:3306/jt_db?serverTimezone=UTC&rewriteBatchedStatements=true
+diverClass=com.mysql.cj.jdbc.Driver-->
+
+<configuration>
+
+<!--    引入外部文件-->
+    <properties resource="db.properties"/>
+
+<!--     标准日志实现-->
+    <settings>
+<!--        <setting name="mapUnderscoreToCamelCase" value="true"/>-->
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
+    </settings>
+
+<!--    路径起别名-->
+    <typeAliases>
+       <package name="cn.zhou.entity"/>
+    </typeAliases>
+
+
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${driver}"/>
+                <property name="url" value="${url}"/>
+                <property name="username" value="${username}"/>
+                <property name="password" value="${password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <mappers>
+        <package name="cn.zhou.mapper"/>
+    </mappers>
+
+
+</configuration>

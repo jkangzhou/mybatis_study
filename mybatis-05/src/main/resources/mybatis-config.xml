@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<!--
+user=root
+password=6962259
+url=jdbc:mysql://127.0.0.1:3306/jt_db?serverTimezone=UTC&rewriteBatchedStatements=true
+diverClass=com.mysql.cj.jdbc.Driver-->
+
+<configuration>
+
+<!--    引入外部文件-->
+    <properties resource="db.properties"/>
+
+<!--     标准日志实现-->
+    <settings>
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <setting name="aggressiveLazyLoading" value="false"/>
+    </settings>
+
+<!--    路径起别名-->
+    <typeAliases>
+        <typeAlias type="cn.zhou.bean.Student" />
+        <typeAlias type="cn.zhou.bean.Teacher" />
+    </typeAliases>
+
+
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${driver}"/>
+                <property name="url" value="${url}"/>
+                <property name="username" value="${username}"/>
+                <property name="password" value="${password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <mappers>
+        <package name="cn.zhou.dao"/>
+    </mappers>
+
+</configuration>

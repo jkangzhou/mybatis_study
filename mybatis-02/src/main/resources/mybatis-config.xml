@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<!--
+user=root
+password=6962259
+url=jdbc:mysql://127.0.0.1:3306/jt_db?serverTimezone=UTC&rewriteBatchedStatements=true
+diverClass=com.mysql.cj.jdbc.Driver-->
+
+<configuration>
+<!--    引入外部文件-->
+    <properties resource="db.properties">
+<!--        <property name="driver" value="com.mysql.jdbc.Driver"/>-->
+<!--        <property name="url" value="jdbc:mysql://localhost:3306/mybatis?useSSl=true&amp;characterEncoding=utf-8&amp;useUnicode=true&amp;serverTimezone=UTC&amp;"/>-->
+<!--        <property name="userName" value="root"/>-->
+<!--        <property name="password" value="6962259"/>-->
+    </properties>
+<!--    给全路径名起别名 有两种方式
+        2.package name=“cn.zhou.bean” 会自动扫描包下面的bean  并且以类首字母小写重新命名（推荐）  也可以大写
+        3.注解 @ALIas（“名字”）   修改后在Mapper文件中参数类型就可以简写
+-->
+    <typeAliases>
+        <typeAlias type="cn.zhou.bean.User"/>
+        <typeAlias type="cn.zhou.dao.UserMapper"/>
+    </typeAliases>
+
+    <environments default="Test">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql://localhost:3306/mybatis?useSSl=true&amp;characterEncoding=utf-8&amp;useUnicode=true&amp;serverTimezone=UTC&amp;"/>
+                <property name="username" value="root"/>
+                <property name="password" value="6962259"/>
+            </dataSource>
+        </environment>
+
+        <environment id="Test">
+        <transactionManager type="JDBC"/>
+        <dataSource type="POOLED">
+            <property name="driver" value="${driver}"/>
+            <property name="url" value="${url}"/>
+            <property name="username" value="${username}"/>
+            <property name="password" value="${password}"/>
+        </dataSource>
+        </environment>
+
+    </environments>
+
+<!--    如果Mapper.xml跟这接口放 则需要写全包名中间用/ 分隔
+        还可以使用包扫描 但是配置文件名必须和接口名一致 并且放到同一个包下
+        我们可以在resource下建一个和配置文件相同的包路径
+-->
+   <mappers>
+       <mapper resource="cn/zhou/dao/userMapper.xml"/>
+   </mappers>
+</configuration>

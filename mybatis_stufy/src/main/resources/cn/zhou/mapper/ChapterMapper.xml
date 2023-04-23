@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zhou.mapper.ChapterMapper">
+
+    <resultMap type="Chapter" id="ChapterMap">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="videoId" column="video_id" jdbcType="INTEGER"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="ordered" column="ordered" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!--    查询所有-->
+    <select id="listChapter" resultMap="ChapterMap">
+        select * from chapter
+    </select>
+
+<!--resultType 是mybatis自动创建了一个 所属类型的resultMap  只不过属性名和列名一一对应  要是对应不上就要自己重写-->
+
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="ChapterMap">
+        select id,
+               video_id,
+               title,
+               ordered,
+               create_time
+        from chapter
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="ChapterMap">
+        select
+        id, video_id, title, ordered, create_time
+        from chapter
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="videoId != null">
+                and video_id = #{videoId}
+            </if>
+            <if test="title != null and title != ''">
+                and title = #{title}
+            </if>
+            <if test="ordered != null">
+                and ordered = #{ordered}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from chapter
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="videoId != null">
+                and video_id = #{videoId}
+            </if>
+            <if test="title != null and title != ''">
+                and title = #{title}
+            </if>
+            <if test="ordered != null">
+                and ordered = #{ordered}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+        </where>
+    </select>
+
+
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into chapter(video_id, title, ordered, create_time)
+        values (#{videoId}, #{title}, #{ordered}, #{createTime})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into chapter(video_id, title, ordered, create_time)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.videoId}, #{entity.title}, #{entity.ordered}, #{entity.createTime})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into chapter(video_id, title, ordered, create_time)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.videoId}, #{entity.title}, #{entity.ordered}, #{entity.createTime})
+        </foreach>
+        on duplicate key update
+        video_id = values(video_id),
+        title = values(title),
+        ordered = values(ordered),
+        create_time = values(create_time)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update chapter
+        <set>
+            <if test="videoId != null">
+                video_id = #{videoId},
+            </if>
+            <if test="title != null and title != ''">
+                title = #{title},
+            </if>
+            <if test="ordered != null">
+                ordered = #{ordered},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from chapter
+        where id = #{id}
+    </delete>
+
+</mapper>
+

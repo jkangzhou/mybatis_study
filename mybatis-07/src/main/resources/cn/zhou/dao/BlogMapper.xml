@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zhou.dao.BlogMapper">
+
+<!--     设置useGeneratedKeys为true，返回数据库自动生成的记录主键id 默认为false
+         keyProperty：指对应的主键属性，也就是mybatis获取主键值后，将这个值封装给javabean的那个属性  设置了主键自增的话此时传参id 可以为空 mysql自增-->
+<!--    useGeneratedKeys="false" keyProperty="id"-->
+    <insert id="addBlog" parameterType="blog" >
+        insert into blog (id, title, author, create_time, views)
+        values (#{id},#{title},#{author},#{createTime},#{views});
+    </insert>
+
+<!--可以引入相同代码  根据id  用include调用  尽量只包含if片段-->
+    <sql id="if-title-author">
+        <if test="title != null">
+            title = #{title}
+        </if>
+        <if test="author != null">
+            and author = #{author}
+        </if>
+    </sql>
+    <!--需求1：
+    根据作者名字和博客名字来查询博客！
+    如果作者名字为空，那么只根据博客名字查询，反之，则根据作者名来查询
+    select * from blog where title = #{title} and author = #{author}
+    -->
+
+<!--    where 元素只会在子元素返回任何内容的情况下才插入 “WHERE” 子句。
+        而且，若子句的开头为 “AND” 或 “OR”，where 元素也会将它们去除。-->
+    <select id="queryBlogIf" parameterType="map" resultType="blog">
+        select * from blog
+        <where>
+          <include refid="if-title-author"></include>
+        </where>
+    </select>
+
+    <select id="queryBlogChoose" parameterType="map" resultType="blog">
+        select * from blog
+        <where>
+        <choose>
+            <when test="title != null">
+                title=#{title}
+            </when>
+            <when test="author != null">
+                and author=#{author}
+            </when>
+            <otherwise>
+                and views=#{views}
+            </otherwise>
+        </choose>
+        </where>
+    </select>
+
+
+    <!--注意set是用的逗号隔开-->
+    <update id="updateBlog" parameterType="map">
+        update blog
+        <set>
+            <if test="title != null">
+                title = #{title},
+            </if>
+            <if test="author != null">
+                author = #{author},
+            </if>
+        </set>
+        where id = #{id};
+    </update>
+<!--    select *from blog where id=1 or id=2 or id=3-->
+    <select id="queryBlogForeach" resultType="blog" parameterType="map">
+        select *from blog
+        <where>
+            <foreach collection="ids" item="id" open="(" close=")" separator="or">
+                id=#{id}
+            </foreach>
+        </where>
+    </select>
+</mapper>

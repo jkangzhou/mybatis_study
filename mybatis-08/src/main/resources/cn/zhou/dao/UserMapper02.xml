@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zhou.dao.UserMapper02">
+    <!--    这个更高级的配置创建了一个 FIFO 缓存，每隔 60 秒刷新，最多可以存储结果对象或列表的 512 个引用，
+            而且返回的对象被认为是只读的，因此对它们进行修改可能会在不同线程中的调用者产生冲突。-->
+
+<!--    eviction:缓存的回收策略:
+LRU  -最近最少使用的:移除最长时间不被使用的对象。
+FIFO -先进先出:按对象进入缓存的顺序来移除它们。
+SOFT -软引用:移除基于垃圾回收器状态和软引用规则的对象。
+WEAK -弱引用:更积极地移除基于垃圾收集器状态和弱引用规则的对象。
+默认的是LRU。
+flushInterval:缓存刷新间隔
+缓存多长时间清空-次，默认不清空，设置-个毫秒值
+readonly:是否只读:
+true:只读; mybatis认为所有 从缓存中获取数据的操作都是只读操作，不会修改数据。
+mybatis为了加快获取速度，直接就会将数据在缓存中的引用交给用户。不安全，速度快
+false:非只读: mybatis觉得获取的数据可能会被修改。
+mybatis会利用序列化&反序列的技术克隆一份新的数据给你。 安全，速度慢
+-->
+    <cache
+            eviction="FIFO"
+            flushInterval="60000"
+            size="512"
+            readOnly="true">
+
+    </cache>
+
+    <select id="getUser" resultType="user">
+    select * from user ;
+    </select>
+
+    <select id="getUserById" resultType="user" >
+    select * from user where id=#{id};
+    </select>
+</mapper>

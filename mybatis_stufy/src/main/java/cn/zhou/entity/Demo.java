@@ -1,0 +1,20 @@
+package cn.zhou.entity;
+
+public class Demo {
+    String name;
+
+    @Override
+    public String toString() {
+        return "Demo{" +
+                "name='" + name + '\'' +
+                '}';
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+}
